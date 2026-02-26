@@ -1,4 +1,4 @@
-# ☁️ CloudSight-Analyzer – Intelligent Cloud Infrastructure Monitoring & Analysis
+<h1 align="center">☁️ CloudSight-Analyzer – Intelligent Cloud Infrastructure Monitoring & Analysis</h1>
 
 <div align="center">
   <img src="https://img.icons8.com/fluency/96/cloud.png" width="85" />
