@@ -105,48 +105,37 @@ Managing multi-cloud infrastructure is complex. Organizations struggle with:
 
 High-level architecture of CloudSight-Analyzer:
 
-```text
-            ┌─────────────────────────────────────┐
-            │   Multi-Cloud Infrastructure        │
-            │  (AWS, Azure, GCP, Hybrid)          │
-            └──────────────┬──────────────────────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-    ┌───▼───┐          ┌───▼───┐         ┌───▼───┐
-    │  AWS  │          │ Azure │         │  GCP  │
-    │ APIs  │          │ APIs  │         │ APIs  │
-    └───┬───┘          └───┬───┘         └───┬───┘
-        │                  │                  │
-        └──────────────────┼──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │   Data Collection Layer             │
-        │  (Schedulers, Collectors, Adapters) │
-        └──────────────────┬──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │    Time-Series Database             │
-        │  (Prometheus, InfluxDB, TimescaleDB)│
-        └──────────────────┬──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │    Analytics & Processing Engine    │
-        │  • ML Anomaly Detection             │
-        │  • Cost Optimization Algorithms     │
-        │  • Security Compliance Checks       │
-        │  • Predictive Models                │
-        └──────────────────┬──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │      FastAPI REST Service           │
-        │  /metrics, /alerts, /reports, ...   │
-        └──────────────────┬──────────────────┘
-                           │
-        ┌──────────────────▼──────────────────┐
-        │  Frontend Dashboard & Integrations  │
-        │  (React, Grafana, Slack, Teams)     │
-        └──────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A[User Uploads Cloud Logs or Data] --> B[Frontend Dashboard Interface]
+    
+    B --> C[Input Validation Layer]
+    C --> D[API Request to Backend]
+    
+    D --> E[Backend Server]
+    E --> F[Data Preprocessing Module]
+    
+    F --> G[Cloud Analysis Engine]
+    
+    G --> H[Pattern Detection Module]
+    G --> I[Anomaly Detection Module]
+    G --> J[Statistical Analysis Module]
+    
+    H --> K[Insight Generation Engine]
+    I --> K
+    J --> K
+    
+    K --> L[Structured Analysis Results]
+    
+    L --> M[Database Storage]
+    M --> N[Analysis Metadata Records]
+    
+    L --> O[JSON Response to Frontend]
+    
+    O --> P[Visualization Layer]
+    P --> Q[Charts and Graphs]
+    P --> R[Risk and Insight Panels]
+    P --> S[Interactive Analytics Dashboard]
 ```
 
 ---
