@@ -130,6 +130,7 @@ CloudSight-Analyzer/
 ├─ requirements.txt
 ├─ docker-compose.yml
 ├─ Dockerfile
+├─ .dockerignore
 │
 ├─ cloudsight_analyzer/
 │  ├─ __init__.py
@@ -402,6 +403,21 @@ Clone Repository
                            │
                            └── Health Check → /api/health
 ```
+### 🐳 Create the `.dockerignore` File
+
+Create a file named **`.dockerignore`** in the root directory of the project and add the following contents:
+
+```dockerignore
+node_modules
+dist
+.env
+.git
+.gitignore
+.idx
+README.md
+```
+This file prevents unnecessary files and folders from being copied into the Docker build context, resulting in faster builds and smaller Docker images.
+
 ---
 
 ## 📊 API Endpoints
