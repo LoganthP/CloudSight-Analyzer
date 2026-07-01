@@ -18,27 +18,6 @@
 
 ---
 
-## 📚 Table of Contents
-
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Supported Cloud Platforms](#-supported-cloud-platforms)
-- [Installation & Setup](#--installation--setup)
-- [Configuration](#-configuration)
-- [Usage Guide](#-usage-guide)
-- [API Endpoints](#-api-endpoints)
-- [Monitoring Dashboards](#-monitoring-dashboards)
-- [Analytics & Reporting](#-analytics--reporting)
-- [Performance Optimization](#-performance-optimization)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Contact](#-contact)
-
----
-
 ## 🔎 Overview
 
 Managing multi-cloud infrastructure is complex. Organizations struggle with:
