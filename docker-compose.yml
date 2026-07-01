@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  cloudsight-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cloudsight-analyzer
+    ports:
+      - "5173:5173"  # Vite frontend
+      - "3000:3000"  # Express backend
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
