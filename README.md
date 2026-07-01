@@ -273,271 +273,156 @@ CloudSight-Analyzer/
 
 ## 🚀 Installation & Setup
 
-### Prerequisites
+### 📋 Prerequisites
 
-- Python 3.9+
-- PostgreSQL 12+ or MongoDB for metadata storage
-- InfluxDB 2.0+ or Prometheus for time-series metrics
-- Redis 6.0+ for caching
-- Docker and Docker Compose (recommended)
-- Cloud provider credentials (AWS, Azure, GCP)
+Make sure the following are installed:
 
-### Option 1: Docker Installation (Recommended)
+- **Node.js** (v18 or later recommended)
+- **npm** (included with Node.js)
+- **Git** (optional, for cloning the repository)
+- **Docker & Docker Compose** (optional, for containerized deployment)
+
+---
+
+### 📦 Installation
+
+Clone the repository and install all required dependencies.
 
 ```bash
-# Clone the repository
-git clone https://github.com/LoganthP/CloudSight-Analyzer.git
+git clone <repository-url>
 cd CloudSight-Analyzer
-
-# Create environment configuration
-cp .env.example .env
-# Edit .env with your cloud credentials and API keys
-
-# Build and start all services
-docker-compose up -d
-
-# Verify services are running
-docker-compose ps
-
-# View logs
-docker-compose logs -f cloudsight-api
-
-# Access the application
-# API: http://localhost:8000
-# Swagger Docs: http://localhost:8000/docs
-# Grafana Dashboard: http://localhost:3000 (admin/admin)
+npm install
 ```
 
-### Option 2: Manual Installation
+> **Note:** Since this is a unified full-stack project, the root `package.json` installs both frontend and backend dependencies.
 
-#### Backend Setup
+---
+
+### ▶️ Run in Development Mode
+
+Start both the **React frontend** and **Express backend** simultaneously.
 
 ```bash
-# Clone repository
-git clone https://github.com/LoganthP/CloudSight-Analyzer.git
-cd CloudSight-Analyzer
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
-
-# Start the API server
-uvicorn cloudsight_analyzer.api.main:app --host 0.0.0.0 --port 8000 --reload
-# API will be available at http://localhost:8000
+npm run dev
 ```
 
-#### Database Setup
+### Running Services
+
+| Service | URL |
+|---------|-----|
+| 🌐 Frontend (Vite) | http://localhost:5173 |
+| ⚙️ Backend API | http://localhost:3000 |
+| ❤️ Health Check | http://localhost:3000/api/health |
+
+The development server includes:
+
+- ⚡ Hot Module Replacement (HMR) for React
+- 🔄 Automatic backend restart with Nodemon
+- 🚀 Concurrent frontend and backend execution
+
+---
+
+### 🏗️ Build for Production
+
+Generate an optimized production build.
 
 ```bash
-# PostgreSQL for metadata
-sudo apt-get install postgresql postgresql-contrib
-createdb cloudsight_analyzer
-createuser cloudsight_user --pwprompt
+npm run build
+```
 
-# InfluxDB for time-series metrics
-wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install influxdb2
+Preview the production build locally:
 
-# Redis for caching
-sudo apt-get install redis-server
-
-# Start services
-sudo systemctl start postgresql influxdb redis-server
+```bash
+npm run preview
 ```
 
 ---
 
-## ⚙️ Configuration
+### ⚙️ Environment Variables
 
-### Environment Variables (.env)
+The application works out of the box with sensible defaults.
+
+Create a `.env` file in the project root if you wish to customize the configuration.
 
 ```env
-# Application
-APP_NAME=CloudSight-Analyzer
-APP_ENV=production
-DEBUG=False
-SECRET_KEY=your-secret-key-here
-
-# Database
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USER=cloudsight_user
-POSTGRES_PASSWORD=your_password
-POSTGRES_DB=cloudsight_analyzer
-
-# Time-Series Database
-INFLUXDB_URL=http://localhost:8086
-INFLUXDB_ORG=CloudSight
-INFLUXDB_BUCKET=cloud-metrics
-INFLUXDB_TOKEN=your-influxdb-token
-
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_DB=0
-
-# AWS Configuration
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_REGIONS=us-east-1,us-west-2,eu-west-1
-
-# Azure Configuration
-AZURE_TENANT_ID=your_tenant_id
-AZURE_CLIENT_ID=your_client_id
-AZURE_CLIENT_SECRET=your_client_secret
-AZURE_SUBSCRIPTION_ID=your_subscription_id
-
-# GCP Configuration
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
-GCP_PROJECT_ID=your_project_id
-
-# Notification Services
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
-
-# API Keys
-EXTERNAL_API_KEY=your_api_key_for_third_party_services
-
-# Collection Intervals (seconds)
-METRICS_COLLECTION_INTERVAL=300  # 5 minutes
-COST_COLLECTION_INTERVAL=3600    # 1 hour
-SECURITY_SCAN_INTERVAL=86400     # 24 hours
+PORT=3000
+API_URL=/api
 ```
 
-### Cloud Provider Configuration
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3000` | Backend server port |
+| `API_URL` | `/api` | Base API endpoint |
 
-#### AWS
+---
 
-```bash
-# IAM Policy required for CloudSight-Analyzer
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:Describe*",
-        "rds:Describe*",
-        "s3:ListBucket",
-        "s3:GetBucketPolicy",
-        "ce:GetCostAndUsage",
-        "cloudwatch:GetMetricStatistics",
-        "iam:Get*",
-        "iam:List*"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
+### 🐳 Running with Docker
 
-#### Azure
+Build and start the application using Docker Compose.
 
 ```bash
-# Required roles
-az role assignment create --assignee <app-id> \
-  --role "Monitoring Reader" \
-  --scope /subscriptions/<subscription-id>
-```
-
-#### GCP
-
-```bash
-# Service account permissions
-gcloud projects add-iam-policy-binding <project-id> \
-  --member=serviceAccount:<service-account@project.iam.gserviceaccount.com> \
-  --role=roles/monitoring.viewer
+docker-compose up -d --build
 ```
 
 ---
 
-## 📖 Usage Guide
+### 🌍 Access the Application
 
-### 1. Register Cloud Provider
+After the containers have started:
 
-```bash
-curl -X POST "http://localhost:8000/api/v1/clouds" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -d '{
-    "provider": "aws",
-    "name": "Production AWS",
-    "credentials": {
-      "access_key_id": "AKIA...",
-      "secret_access_key": "..."
-    },
-    "regions": ["us-east-1", "eu-west-1"]
-  }'
-```
+| Service | URL |
+|---------|-----|
+| 🌐 Frontend Dashboard | http://localhost:5173 |
+| ⚙️ Backend API | http://localhost:3000 |
+| ❤️ API Health Check | http://localhost:3000/api/health |
 
-### 2. Fetch Real-Time Metrics
+---
 
-```python
-from cloudsight_analyzer.api.client import CloudSightClient
+### 📜 View Container Logs
 
-client = CloudSightClient(api_url="http://localhost:8000", api_key="your_api_key")
-
-# Get EC2 instance metrics
-metrics = client.get_metrics(
-    cloud_provider="aws",
-    resource_type="ec2",
-    time_range=("2025-11-01", "2025-11-30"),
-    aggregation="hourly"
-)
-print(metrics)
-```
-
-### 3. Cost Analysis
+Monitor application logs in real time.
 
 ```bash
-curl "http://localhost:8000/api/v1/costs/analysis" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -d '{
-    "cloud": "aws",
-    "start_date": "2025-11-01",
-    "end_date": "2025-11-30",
-    "group_by": "service"
-  }'
+docker-compose logs -f
 ```
 
-### 4. Security Compliance Check
+---
+
+### 🛑 Stop the Containers
 
 ```bash
-curl "http://localhost:8000/api/v1/security/scan" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -X POST \
-  -d '{
-    "cloud": "azure",
-    "framework": "cis",
-    "severity": "high"
-  }'
+docker-compose down
 ```
 
-### 5. Generate Reports
+---
+
+### 🔄 Rebuild Containers
+
+If dependencies or configuration change:
 
 ```bash
-curl "http://localhost:8000/api/v1/reports/generate" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -X POST \
-  -d '{
-    "report_type": "executive_summary",
-    "period": "monthly",
-    "include_sections": ["costs", "security", "performance"]
-  }' \
-  -o report.pdf
+docker-compose up -d --build
 ```
 
+---
+
+### 📁 Project Workflow
+
+```text
+Clone Repository
+        │
+        ▼
+   npm install
+        │
+        ▼
+    npm run dev
+        │
+        ├────────► Frontend → http://localhost:5173
+        │
+        └────────► Backend  → http://localhost:3000
+                           │
+                           └── Health Check → /api/health
+```
 ---
 
 ## 📊 API Endpoints
@@ -585,7 +470,37 @@ password: admin
 # Import CloudSight dashboards from:
 /grafana/dashboards/
 ```
+---
+## 🛠️ Tech Stack
 
+| Category | Technologies |
+|----------|--------------|
+| **Core Language** | TypeScript |
+| **Frontend Framework** | React 18 |
+| **Build Tool** | Vite |
+| **Routing** | React Router (`react-router-dom`) |
+| **Styling** | Tailwind CSS |
+| **UI Components** | shadcn/ui, Radix UI |
+| **Icons** | Lucide React |
+| **Theme Management** | Next Themes |
+| **State Management & Data Fetching** | SWR |
+| **Forms** | React Hook Form |
+| **Validation** | Zod, @hookform/resolvers |
+| **Charts & Analytics** | Recharts |
+| **Animations** | Framer Motion |
+| **Carousel** | Embla Carousel |
+| **Date & Calendar** | date-fns, React Day Picker |
+| **Backend Runtime** | Node.js |
+| **Backend Framework** | Express.js |
+| **Development Server** | tsx, Nodemon |
+| **Middleware** | CORS, Dotenv |
+| **Development Tools** | Concurrently |
+| **Code Quality** | ESLint |
+| **CSS Processing** | PostCSS, Autoprefixer |
+| **Package Manager** | npm |
+| **Version Control** | Git, GitHub |
+
+---
 ---
 
 ## 📈 Analytics & Reporting
@@ -661,44 +576,3 @@ services:
 - **Batch Processing:** Bulk inserts for time-series data
 - **Index Strategy:** Optimized database indexes for common queries
 - **Aggregation:** Pre-computed hourly/daily summaries
-
----
-
-## 🛤️ Roadmap
-
-- [x] Multi-cloud data collection
-- [x] Real-time metrics aggregation
-- [x] Cost analysis & optimization
-- [x] Security compliance scanning
-- [x] REST API & authentication
-- [ ] ML-based anomaly detection (advanced)
-- [ ] Predictive capacity planning
-- [ ] Auto-remediation for common issues
-- [ ] Mobile application
-- [ ] Terraform/IaC integration
-- [ ] Kubernetes cluster monitoring
-- [ ] FinOps automation
-
----
-
-## 🤝 Contributing
-
-1. Fork & branch: `git checkout -b feature/your-feature`
-2. Code with style: Follow PEP8, add type hints, docstrings
-3. Add tests: `pytest tests/`
-4. Commit: Clear, descriptive messages
-5. Push & PR: Reference issues, add screenshots
-
----
-
-
-<div align="center">
-
-![GitHub stars](https://img.shields.io/github/stars/LoganthP/CloudSight-Analyzer?style=social)
-![GitHub forks](https://img.shields.io/github/forks/LoganthP/CloudSight-Analyzer?style=social)
-
-**Made with ☁️ for Multi-Cloud Intelligence**
-
-[↑ Back to Top](#%EF%B8%8F-cloudsight-analyzer--intelligent-cloud-infrastructure-monitoring--analysis)
-
-</div>
